@@ -78,7 +78,6 @@ uint8_t u8x8_stm32_gpio_and_delay(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, vo
 	case U8X8_MSG_GPIO_CS:
 		/* Insert codes for SS pin control */
 		HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, arg_int);
-//		HAL_Delay(1);
 		break;
 	case U8X8_MSG_GPIO_DC:
 		/* Insert codes for DC pin control */
@@ -103,37 +102,20 @@ uint8_t u8x8_byte_stm32_hw_spi(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void 
 		if(HAL_SPI_Transmit_DMA(&hspi1, arg_ptr, arg_int) != HAL_OK){
 			  Error_Handler();
 		}
-//		HAL_SPI_Transmit(&hspi1, arg_ptr, arg_int, TX_TIMEOUT);
 		while (SPI1->SR & SPI_SR_BSY){};
-		//while (SPI1->SR & SPI_SR_BSY){};
-//		HAL_Delay(10);
-//		while (hspi1.hdmatx->State != HAL_DMA_STATE_READY);
-//		if(HAL_SPI_Transmit_DMA(&hspi1, arg_ptr, arg_int) != HAL_OK){
-//		    Error_Handler();
-//		}
-//		while (hspi1.hdmatx->State != HAL_DMA_STATE_READY);
-
 		break;
 	case U8X8_MSG_BYTE_INIT:
-		/* Insert codes to begin SPI transmission */
 		break;
 	case U8X8_MSG_BYTE_SET_DC:
-//		while (SPI1->SR & SPI_SR_BSY){};
-		/* Control DC pin, U8X8_MSG_GPIO_DC will be called */
 		while(!(SPI1->SR & SPI_SR_TXE)){};
 		while (SPI1->SR & SPI_SR_BSY){};
 		u8x8_gpio_SetDC(u8x8, arg_int);
-
-//		HAL_Delay(5);
 		break;
 	case U8X8_MSG_BYTE_START_TRANSFER:
 		/* Select slave, U8X8_MSG_GPIO_CS will be called */
 		u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_enable_level);
-//		HAL_Delay(5);
 		break;
 	case U8X8_MSG_BYTE_END_TRANSFER:
-		/* Insert codes to end SPI transmission */
-//		HAL_Delay(5);
 		while(!(SPI1->SR & SPI_SR_TXE)){};
 		while (SPI1->SR & SPI_SR_BSY){};
 		u8x8_gpio_SetCS(u8x8, u8x8->display_info->chip_disable_level);
@@ -443,3 +425,4 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
